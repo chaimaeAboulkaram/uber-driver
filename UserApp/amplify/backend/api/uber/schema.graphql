@@ -1,0 +1,98 @@
+type User
+  @model
+  @auth(
+    rules: [
+      {
+        allow: owner
+        ownerField: "authorId"
+        operations: [create, delete, read, update]
+      }
+      {
+        allow: groups
+        groups: ["Admin"]
+        operations: [create, delete, read, update]
+      }
+      {allow: public, operations: [read]}
+      {allow: private, operations: [read]}
+    ]
+  ) {
+  id: ID! @primaryKey
+  username: String!
+  email: String!
+  
+  orders: [Order] @hasMany(indexName: "byUser", fields: ["id"])
+  car: Car @hasOne(fields: ["id"])
+}
+
+type Car
+  @model
+  @auth(
+    rules: [
+      {
+        allow: owner
+        ownerField: "authorId"
+        operations: [create, delete, read, update]
+      }
+      {
+        allow: groups
+        groups: ["Admin"]
+        operations: [create, delete, read, update]
+      }
+      {allow: public, operations: [read]}
+      {allow: private, operations: [read]}
+    ]
+  ) {
+  id: ID! @primaryKey
+  type: String!
+  latitude: Float
+  longitude: Float
+  heading: Float
+  isActive: Boolean
+
+  orders: [Order] @hasMany(indexName: "byCar", fields: ["id"])
+
+  driverId: ID! @index(name: "byUser", queryField: "driverId")
+  driver: User @hasOne(fields: ["driverId"])
+}
+
+type Order
+  @model
+  @auth(
+    rules: [
+      {
+        allow: owner
+        ownerField: "authorId"
+        operations: [create, delete, read, update]
+      }
+      {
+        allow: groups
+        groups: ["Admin"]
+        operations: [create, delete, read, update]
+      }
+      {allow: public, operations: [read]}
+      {allow: private, operations: [read]}
+    ]
+  ) {
+  id: ID! @primaryKey
+  createdAt: String!
+
+  type: String!
+  status: String
+
+  originLatitude: Float!
+  oreiginLongitude: Float!
+
+  destLatitude: Float!
+  destLongitude: Float!
+
+  userId: ID! @index(name: "byUser", queryField: "userId")
+  user: User @hasOne(fields: ["userId"])
+
+  carId: ID! @index(name: "byCar", sortKeyFields: ["createdAt"], queryField: "carId")
+  car: Car @hasOne(fields: ["carId"])
+}
+
+type Subscription {
+  onOrderUpdated(id: ID!): Order @aws_subscribe(mutations: ["updateOrder"])
+  onCarUpdated(id: ID!): Car @aws_subscribe(mutations: ["updateCar"])
+}

@@ -1,0 +1,20 @@
+{
+  "version": 1,
+  "serviceConfiguration": {
+    "apiName": "uber",
+    "serviceName": "AppSync",
+    "gqlSchemaPath": "C:\\Users\\HP\\React Native Projects\\uberDriver\\Uber\\amplify\\backend\\api\\uber\\schema.graphql",
+    "defaultAuthType": {
+      "mode": "AMAZON_COGNITO_USER_POOLS",
+      "cognitoUserPoolId": "authuber3b92f7c03b92f7c0"
+    },
+    "additionalAuthTypes": [
+      {
+        "mode": "API_KEY",
+        "expirationTime": 7,
+        "apiKeyExpirationDate": "2022-01-10T03:43:26.547Z",
+        "keyDescription": "utfnl5bl7rbnrh625lrw3vgv7y"
+      }
+    ]
+  }
+}
